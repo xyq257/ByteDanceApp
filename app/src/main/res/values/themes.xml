@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.FirstTry" parent="Theme.Material3.Light.NoActionBar">
+        <!-- 主色等按需要自定义 -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+        <item name="android:fontFamily">@font/kai</item>
+        <item name="fontFamily">@font/kai</item>
+    </style>
+
+    <style name="OtpEditTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_otp_box</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+    <style name="Widget.App.TextInputLayout.OutlinedBox.Dense" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <!--
+            这个样式继承自 MaterialComponents 的 Dense 样式，
+            它会自动处理好图标和文本之间的间距，并且不会影响触摸事件。
+            你可以根据需要调整 endIconMode、startIconTint 等属性。
+        -->
+    </style>
+</resources>
