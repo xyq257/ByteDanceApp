@@ -9,8 +9,8 @@
 | 项目             | 内容                                                         |
 | :--------------- | :----------------------------------------------------------- |
 | **交付项**       | 客户端训练营 - 课程项目 - 仿抖音消息功能                     |
-| **产物地址**     |                                                              |
-| **代码运行截图** | <img src="C:\Users\36020\Desktop\register.png" width="200px" /> <img src="C:\Users\36020\Desktop\LoginUI.png" width="200px" /><img src="C:\Users\36020\Desktop\mainactivity.png" width="200px" /><img src="C:\Users\36020\Desktop\email.png" width="400px" /><img src="C:\Users\36020\Desktop\Message.png" width="200px" /><img src="C:\Users\36020\Desktop\chat.png" width="200px" /><img src="C:\Users\36020\Desktop\resetmessage.png" width="180px" /> |
+| **产物地址**     | https://github.com/xyq257/ByteDanceApp.git                   |
+| **代码运行截图** | <img src="./assets/register.png" width="200px" /> <img src="./assets/LoginUI.png" width="200px" /> <img src="./assets/mainactivity.png" width="200px" /> <img src="./assets/email.png" width="400px" /> <img src="./assets/Message.png" width="200px" /> <img src="./assets/chat.png" width="200px" /> <img src="./assets/resetmessage.png" width="180px" /> |
 
 ## 3. 实现的功能列表
 
@@ -78,4 +78,6 @@
 | **1. WebSocket 连接随 Activity 切换而断开**                  | WebSocket 的生命周期与 `MessageActivity` 错误地绑定。        | **架构重构**：引入**`WebSocketManager`单例**来全局管理连接，Activity作为监听者动态注册和注销，实现生命周期解耦。 |
 | **2. 数据库操作导致`Connection Pool Closed`崩溃**            | 在“用完即关”的数据库模式下，`Cursor`还在使用时，其依赖的`SQLiteDatabase`连接被提前关闭。 | **架构重构**：将`UserDbHelper`改造为**单例模式**，确保`SQLiteDatabase`实例在应用生命周期内长久持有，避免了连接被意外关闭。 |
 | **3.写xml文件的时候使用了android:background="@null导致无法在输入框复制粘贴** | 这个命令不仅去掉了背景，在某些 Android 版本或主题下，也同时移除了光标手柄`Cursor Handles`和文本选择手柄的样式引用 | **删了就行**                                                 |
-|                                                              |                                                              |                                                              |
+
+**📂 附注：** 后端与前端相关的 SQL 数据库文件已上传至 Git 仓库。
+
