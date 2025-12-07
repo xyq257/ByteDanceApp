@@ -337,43 +337,15 @@ public class UserDbHelper extends SQLiteOpenHelper {
         database.delete(TABLE_USER, null, null);
     }
 
-    // 保留原有 updateRemark (兼容旧逻辑)，但已新增 saveUserRemark 作为明确方法
+    // UserDbHelper.java
+
+    // 修改后的 updateRemark：作为一个统一的入口，同时更新两张表
     public void updateRemark(String account, String newRemark) {
         if (account == null) return;
-        SQLiteDatabase db = null;
-        try {
-            db = getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            cv.put("remark", newRemark);
-
-            // 先尝试这两个常见表名
-            String[] candidateTables = new String[] { "user", "users" };
-            for (String table : candidateTables) {
-                try {
-                    int updated = db.update(table, cv, "account = ?", new String[]{account});
-                    if (updated > 0) {
-                        return; // 成功更新，退出
-                    }
-                } catch (Exception e) {
-                    // 可能表或列不存在，尝试创建 remark 列（若表存在）
-                    try {
-                        db.execSQL("ALTER TABLE " + table + " ADD COLUMN remark TEXT");
-                        int updatedAfterAdd = db.update(table, cv, "account = ?", new String[]{account});
-                        if (updatedAfterAdd > 0) {
-                            return;
-                        }
-                    } catch (Exception ignored) {
-                        // 忽略失败，继续尝试下一个候选表
-                    }
-                }
-            }
-            // 如果都没更新到，记录一下（可选）
-            Log.w("UserDbHelper", "updateRemark: no matching table/row found for account=" + account);
-        } catch (Exception e) {
-            Log.e("UserDbHelper", "updateRemark failed", e);
-        } finally {
-            if (db != null) db.close();
-        }
+        Log.d("UserDbHelper", "updateRemark called: account=" + account + ", remark=" + newRemark);
+        saveRemark(account, newRemark);
+        saveUserRemark(account, newRemark);
+        Log.d("UserDbHelper", "updateRemark completed");
     }
 
 

@@ -44,7 +44,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Log.d("123",String.valueOf(position));
         Message currentMessage = messageList.get(position);
-
         // --- 设置头像 ---
         String avatarUrl = currentMessage.getSenderAvatar();
         Glide.with(holder.itemView.getContext())

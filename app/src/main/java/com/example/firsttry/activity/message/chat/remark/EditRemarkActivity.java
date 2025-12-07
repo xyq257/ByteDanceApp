@@ -4,6 +4,7 @@ package com.example.firsttry.activity.message.chat.remark;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,36 +30,39 @@ public class EditRemarkActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btn_save_remark);
         dbHelper = UserDbHelper.getInstance(this);
 
-        conversationId = getIntent().getStringExtra("conversationId");
-        if (conversationId != null) {
-            // 从会话列表中寻找已有的 remark（项目中已有 loadAllConversations）
-            List<Message> convs = dbHelper.loadAllConversations();
-            for (Message m : convs) {
-                if (conversationId.equals(m.getId())) {
-                    String r = m.getRemark();
-                    if (!TextUtils.isEmpty(r)) etRemark.setText(r);
-                    break;
-                }
-            }
+        // ✅ 修改这里，使用正确的 Key
+        conversationId = getIntent().getStringExtra("CONVERSATION_ID");
+        String currentRemark = getIntent().getStringExtra("CURRENT_REMARK");
+
+        Log.d("EditRemark", "conversationId = " + conversationId);
+        Log.d("EditRemark", "currentRemark = " + currentRemark);
+
+        // ✅ 直接使用传入的 remark，不需要再从数据库查询
+        if (!TextUtils.isEmpty(currentRemark)) {
+            etRemark.setText(currentRemark);
         }
 
-        // 统一保存逻辑：更新 conversations 并在后台更新 user 表
+        // 保存逻辑
         btnSave.setOnClickListener(v -> {
             String newRemark = etRemark.getText().toString().trim();
             if (conversationId != null) {
-                // 更新会话表（主线程）
-                dbHelper.saveRemark(conversationId, newRemark);
-                // 后台更新 user 表的 remark 字段
-                new Thread(() -> {
-                    UserDbHelper db = UserDbHelper.getInstance(EditRemarkActivity.this);
-                    db.saveUserRemark(conversationId, newRemark);
-                }).start();
-            }
-            Intent result = new Intent();
-            result.putExtra("new_remark", newRemark);
-            setResult(RESULT_OK, result);
-            finish();
-        });
+                btnSave.setEnabled(false);
 
+                new Thread(() -> {
+                    dbHelper.updateRemark(conversationId, newRemark);
+                    Log.d("EditRemark", "Remark saved successfully");
+
+                    runOnUiThread(() -> {
+                        Intent result = new Intent();
+                        result.putExtra("new_remark", newRemark);
+                        setResult(RESULT_OK, result);
+                        finish();
+                    });
+                }).start();
+            } else {
+                Log.e("EditRemark", "conversationId is null, cannot save!");
+                finish();
+            }
+        });
     }
 }

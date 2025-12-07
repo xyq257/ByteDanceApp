@@ -91,7 +91,6 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
         setupSendButton();
     }
 
-    // === 【新增】按需从服务器同步历史记录的方法 ===
     private void syncHistoryFromServerIfNeeded() {
         new Thread(() -> {
             final List<ChatMessage> localHistory = dbHelper.loadMessagesForConversation(conversationPartnerName, currentUsername);
@@ -144,7 +143,7 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
             rvMessages.scrollToPosition(chatMessageList.size() - 1);
         }
     }
-    // 【辅助方法】滚动到底部
+    //滚动到底部
     private void scrollToBottom() {
         if (!chatMessageList.isEmpty()) {
             rvMessages.scrollToPosition(chatMessageList.size() - 1);
@@ -225,7 +224,9 @@ public class ChatActivity extends AppCompatActivity implements WebSocketListener
                 return;
             }
             etInput.setText("");
-            String formattedTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            sdf.setTimeZone(java.util.TimeZone.getTimeZone("Asia/Shanghai")); // 关键加上这一行
+            String formattedTime = sdf.format(new Date());
             ChatMessage sentMsg = new ChatMessage(String.valueOf(System.currentTimeMillis()), conversationPartnerName, currentUsername, conversationPartnerName, content, formattedTime, true);
             handleNewMessage(sentMsg);
             try {
